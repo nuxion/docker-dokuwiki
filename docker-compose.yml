@@ -1,0 +1,24 @@
+version: "2"
+networks:
+    dokuwiki:
+        external: true
+
+services:
+    doku-nginx:
+        #image: nginx:mainline-alpine
+        image: nuxion/nginx-fpm:1.0
+        volumes:
+            - ./dokuwiki:/dokuwiki
+            - ./certs:/etc/nginx/certs
+            - ./dokusite.conf:/etc/nginx/conf.d/site.conf
+        networks:
+            - dokuwiki
+        ports:
+            - "8282:80"
+            - "8383:443"
+    doku-fpm:
+        image: php:7.0.32-fpm-alpine3.7
+        volumes:
+            - ./dokuwiki:/dokuwiki
+        networks:
+            - dokuwiki
